@@ -44,7 +44,7 @@ export class ETFSimulator {
             fundType === "equity" ? 0.30 : fundType === "mixed" ? 0.15 : 0.0;
     }
 
-    runSimulation(months: number): number {
+    runSimulation(months: number): { finalAmount: number; totalInvested: number; totalTaxPaid: number; months: number } {
         let totalInvested = 0;
         let totalAmount = 0;
         let totalDividends = 0;
@@ -101,6 +101,11 @@ export class ETFSimulator {
         totalAmount -= capitalGainsTax;
         totalTaxPaid += capitalGainsTax;
 
-        return totalAmount;
+        return {
+            finalAmount: totalAmount,
+            totalInvested,
+            totalTaxPaid,
+            months
+        };
     }
 }
