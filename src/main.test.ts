@@ -4,6 +4,7 @@ import { FundedPensionSimulator } from './FundedPensionSimulator';
 
 describe('Simulate ETF', () => {
     it('with linear interest', () => {
+        console.log('Simulating FundedPension with linear interest');
         const fundedsimulator = new FundedPensionSimulator({
             TER: 0.002,
             yearlyInterest: 0.05,
@@ -11,6 +12,7 @@ describe('Simulate ETF', () => {
             currentAge: 24,
         });
         const fundedEndAmount = fundedsimulator.runSimulation();
+        console.log('Simulating ETF with linear interest');
         const etfsimulator = new ETFSimulator({
             TER: 0.002,
             yearlyInterest: 0.05,

@@ -101,10 +101,6 @@ export class ETFSimulator {
         totalAmount -= capitalGainsTax;
         totalTaxPaid += capitalGainsTax;
 
-        console.log(`Total tax paid: €${totalTaxPaid.toFixed(2)}`);
-        console.log(`Profit: €${profit.toFixed(2)}`);
-        console.log(`ìnvested: €${totalInvested.toFixed(2)}`);
-        console.log(`Final amount: €${totalAmount.toFixed(2)}`);
         return totalAmount;
     }
 }

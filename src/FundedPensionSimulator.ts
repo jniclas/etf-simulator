@@ -78,10 +78,6 @@ export class FundedPensionSimulator {
             totalTaxPaid += tax;
         }
 
-        console.log(`Total tax paid: €${totalTaxPaid.toFixed(2)}`);
-        console.log(`Total invested: €${totalInvested.toFixed(2)}`);
-        console.log(`Final amount at retirement age (${this.retirementAge}): €${totalAmount.toFixed(2)}`);
-
         return {
             finalAmount: totalAmount,
             totalInvested,
