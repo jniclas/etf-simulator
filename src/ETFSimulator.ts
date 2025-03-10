@@ -6,6 +6,7 @@ interface ETFSimulatorConfig {
     accumulatingETF?: boolean; // true = accumulating ETF, false = distributing
     taxAllowance?: number; // e.g., 1000€ per year (default)
     baseInterestRate?: number; // Basiszins for Vorabpauschale, e.g., 0.0337 for 3.37%
+    fundType?: "equity" | "mixed" | "other"; // Determines Teilfreistellung
 }
 
 export class ETFSimulator {
@@ -16,6 +17,7 @@ export class ETFSimulator {
     private accumulatingETF: boolean;
     private taxAllowance: number;
     private baseInterestRate: number;
+    private teilfreistellung: number;
 
     private capitalGainsTaxRate = 0.26375; // 25% + 5.5% solidarity surcharge
 
@@ -27,6 +29,7 @@ export class ETFSimulator {
         accumulatingETF = true,
         taxAllowance = 1000,
         baseInterestRate = 0.0337, // Default: 3.37% for Vorabpauschale
+        fundType = "equity",
     }: ETFSimulatorConfig) {
         this.TER = TER;
         this.yearlyInterest = yearlyInterest;
@@ -35,6 +38,10 @@ export class ETFSimulator {
         this.accumulatingETF = accumulatingETF;
         this.taxAllowance = taxAllowance;
         this.baseInterestRate = baseInterestRate;
+
+        // Set Teilfreistellung based on ETF type
+        this.teilfreistellung =
+            fundType === "equity" ? 0.30 : fundType === "mixed" ? 0.15 : 0.0;
     }
 
     runSimulation(months: number): number {
@@ -69,12 +76,14 @@ export class ETFSimulator {
                     const baseReturn = yearlyStartValue * this.baseInterestRate * 0.7;
                     const taxableAmount = Math.min(yearlyReturn, baseReturn);
                     if (taxableAmount > 0) {
-                        const vorabpauschaleTax = taxableAmount * this.capitalGainsTaxRate;
+                        const reducedTaxableAmount = taxableAmount * (1 - this.teilfreistellung);
+                        const vorabpauschaleTax = reducedTaxableAmount * this.capitalGainsTaxRate;
                         taxOwed += vorabpauschaleTax;
                     }
                 } else {
                     const yearlyDividends = totalDividends;
-                    const taxableDividends = Math.max(0, yearlyDividends - this.taxAllowance);
+                    const reducedDividends = yearlyDividends * (1 - this.teilfreistellung);
+                    const taxableDividends = Math.max(0, reducedDividends - this.taxAllowance);
                     const dividendTax = taxableDividends * this.capitalGainsTaxRate;
                     taxOwed += dividendTax;
                 }
@@ -86,7 +95,8 @@ export class ETFSimulator {
         }
 
         const profit = totalAmount - totalInvested;
-        const taxableProfit = Math.max(0, profit - this.taxAllowance);
+        const reducedProfit = profit * (1 - this.teilfreistellung);
+        const taxableProfit = Math.max(0, reducedProfit - this.taxAllowance);
         const capitalGainsTax = taxableProfit * this.capitalGainsTaxRate;
         totalAmount -= capitalGainsTax;
         totalTaxPaid += capitalGainsTax;
