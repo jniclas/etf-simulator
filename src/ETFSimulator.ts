@@ -74,7 +74,7 @@ export class ETFSimulator {
                 if (this.accumulatingETF) {
                     // Vorabpauschale tax (pre-taxation of accumulating ETFs)
                     const yearlyReturn = totalAmount - yearlyStartValue;
-                    const baseReturn = yearlyStartValue * this.baseInterestRate;
+                    const baseReturn = yearlyReturn * this.baseInterestRate;
                     const taxableAmount = Math.max(0, Math.min(yearlyReturn, baseReturn));
                     const reducedTaxableAmount = taxableAmount * (1 - this.teilfreistellung);
                     const vorabpauschaleTax = reducedTaxableAmount * this.capitalGainsTaxRate;
