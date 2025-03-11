@@ -31,6 +31,7 @@ describe('Simulate ETF', () => {
             { 'Field': 'months', 'Funded Pension': fundedEndAmount.months.toFixed(2), 'ETF': etfEndAmount.months.toFixed(2) }
         ]
         printTable(results)
+        console.log("test")
     });
     it('logs ETFInterestCalculator methods output', () => {
         // from https://curvo.eu/backtest/en/market-index/msci-world?currency=eur
