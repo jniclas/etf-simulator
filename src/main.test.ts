@@ -39,8 +39,12 @@ describe('Simulate ETF', () => {
         });
 
         console.log('Calculating monthly interest');
-        const monthlyInterest = calculator.getMonthlyInterestRates((2025-1978)*12);
+        const monthlyInterest = calculator.getMonthlyInterestRates((2025-1978)*12 + 1);
 
-        console.log('Monthly interest:', monthlyInterest);
+        console.log('First 10 elements of monthly interest:', monthlyInterest.slice(0, 5));
+        console.log('Last 10 elements of monthly interest:', monthlyInterest.slice(-5));
+
+        expect(monthlyInterest.length).toBeGreaterThan(0);
+        expect(monthlyInterest[0]).equals(calculator.calculateAverageInterest());
     });
 });

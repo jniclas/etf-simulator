@@ -31,6 +31,7 @@ export class ETFInterestCalculator {
             for (let i = 0; i < months - totalMonths; i++) {
                 interestRates.push(averageInterest);
             }
+            months = totalMonths; // Adjust months to the available data length
         }
 
         for (let i = totalMonths - months; i < totalMonths - 1; i++) {
@@ -43,7 +44,7 @@ export class ETFInterestCalculator {
         return interestRates;
     }
 
-    private calculateAverageInterest(): number {
+    calculateAverageInterest(): number {
         let totalInterest = 0;
         for (let i = 0; i < this.data.length - 1; i++) {
             const currentValue = this.data[i].value;
