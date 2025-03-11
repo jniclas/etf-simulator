@@ -2,23 +2,26 @@ import { describe, it, expect } from 'vitest';
 import { ETFSimulator } from './ETFSimulator';
 import { FundedPensionSimulator } from './FundedPensionSimulator';
 import { printTable } from 'console-table-printer';
+import { ETFInterestCalculator } from './ETFInterestCalculator';
 
 describe('Simulate ETF', () => {
     it('with linear interest', () => {
+        const monthlyInput = 300
+        const TER = 0.002
         console.log('Simulating FundedPension with linear interest');
         const fundedsimulator = new FundedPensionSimulator({
-            TER: 0.002,
+            TER,
             yearlyInterest: 0.05,
-            monthlyInput: 100,
+            monthlyInput,
             currentAge: 24,
             capitalPayout: true
         });
         const fundedEndAmount = fundedsimulator.runSimulation();
         console.log('Simulating ETF with linear interest');
         const etfsimulator = new ETFSimulator({
-            TER: 0.002,
+            TER,
             yearlyInterest: 0.05,
-            monthlyInput: 100
+            monthlyInput
         });
         const etfEndAmount = etfsimulator.runSimulation(fundedEndAmount.months);
         const results = [
@@ -28,5 +31,16 @@ describe('Simulate ETF', () => {
             { 'Field': 'months', 'Funded Pension': fundedEndAmount.months.toFixed(2), 'ETF': etfEndAmount.months.toFixed(2) }
         ]
         printTable(results)
+    });
+    it('logs ETFInterestCalculator methods output', () => {
+        // from https://curvo.eu/backtest/en/market-index/msci-world?currency=eur
+        const calculator = new ETFInterestCalculator({
+            csvFilePath: 'src/msciWorld.csv'
+        });
+
+        console.log('Calculating monthly interest');
+        const monthlyInterest = calculator.getMonthlyInterestRates((2025-1978)*12);
+
+        console.log('Monthly interest:', monthlyInterest);
     });
 });
