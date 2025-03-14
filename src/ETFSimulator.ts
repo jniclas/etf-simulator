@@ -44,7 +44,7 @@ export class ETFSimulator {
             fundType === "equity" ? 0.30 : fundType === "mixed" ? 0.15 : 0.0;
     }
 
-    runSimulation(months: number): { finalAmount: number; totalInvested: number; totalTaxPaid: number; months: number } {
+    runSimulation(months: number, interestByMonth?: number[]): { finalAmount: number; totalInvested: number; totalTaxPaid: number; months: number } {
         let totalInvested = 0;
         let totalAmount = 0;
         let totalDividends = 0;
@@ -54,10 +54,13 @@ export class ETFSimulator {
         const adjustedYearlyInterest = this.yearlyInterest * (1 - this.TER);
         const monthlyInterestRate = adjustedYearlyInterest / 12;
 
-        for (let i = 0; i < months; i++) {
+        const simulationMonths = interestByMonth ? interestByMonth.length : months;
+
+        for (let i = 0; i < simulationMonths; i++) {
             // Add monthly investment first, then apply interest
             totalInvested += this.monthlyInput;
-            totalAmount = (totalAmount + this.monthlyInput) * (1 + monthlyInterestRate);
+            const interestRate = interestByMonth ? interestByMonth[i] : monthlyInterestRate;
+            totalAmount = (totalAmount + this.monthlyInput) * (1 + interestRate);
 
             if (!this.accumulatingETF) {
                 const monthlyDividends = totalAmount * (this.dividendYield / 12);
@@ -107,7 +110,7 @@ export class ETFSimulator {
             finalAmount: totalAmount,
             totalInvested,
             totalTaxPaid,
-            months
+            months: simulationMonths
         };
     }
 }

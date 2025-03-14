@@ -40,25 +40,25 @@ export class FundedPensionSimulator {
         this.capitalPayout = capitalPayout;
     }
 
-    runSimulation(): { finalAmount: number; totalInvested: number; totalTaxPaid: number, months: number } {
+    runSimulation(interestByMonth?: number[]): { finalAmount: number; totalInvested: number; totalTaxPaid: number, months: number } {
         let totalInvested = 0;
         let totalAmount = 0;
         let totalTaxPaid = 0;
 
-        const years = this.retirementAge - this.currentAge;
-        const months = years * 12;
+        const months = interestByMonth ? interestByMonth.length : (this.retirementAge - this.currentAge) * 12;
         const adjustedYearlyInterest = this.yearlyInterest * (1 - this.TER);
         const monthlyInterestRate = adjustedYearlyInterest / 12;
 
         for (let i = 0; i < months; i++) {
             totalInvested += this.monthlyInput;
             totalAmount += this.monthlyInput;
-            totalAmount += totalAmount * monthlyInterestRate;
+
+            const interestRate = interestByMonth ? interestByMonth[i] : monthlyInterestRate;
+            totalAmount += totalAmount * interestRate;
 
             // Versicherungskosten berechnen (0.8% p.a. → 0.0667% pro Monat)
             const insuranceFee = totalAmount * (this.insuranceFeeRate / 12);
             totalAmount -= insuranceFee;
-
         }
 
         const profit = totalAmount - totalInvested;
