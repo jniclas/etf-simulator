@@ -59,7 +59,7 @@ export class ETFSimulator {
         for (let i = 0; i < simulationMonths; i++) {
             // Add monthly investment first, then apply interest
             totalInvested += this.monthlyInput;
-            const interestRate = interestByMonth ? interestByMonth[i] : monthlyInterestRate;
+            const interestRate = interestByMonth ? (interestByMonth[i] - this.TER / 12) : monthlyInterestRate;
             totalAmount = (totalAmount + this.monthlyInput) * (1 + interestRate);
 
             if (!this.accumulatingETF) {

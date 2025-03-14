@@ -53,7 +53,7 @@ export class FundedPensionSimulator {
             totalInvested += this.monthlyInput;
             totalAmount += this.monthlyInput;
 
-            const interestRate = interestByMonth ? interestByMonth[i] : monthlyInterestRate;
+            const interestRate = interestByMonth ? (interestByMonth[i] - this.TER / 12) : monthlyInterestRate;
             totalAmount += totalAmount * interestRate;
 
             // Versicherungskosten berechnen (0.8% p.a. → 0.0667% pro Monat)

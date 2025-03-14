@@ -8,16 +8,14 @@ describe('Simulate ETF', () => {
     it('with linear interest', () => {
         const monthlyInput = 300;
         const TER = 0.002;
-        console.log('Simulating FundedPension with linear interest');
         const fundedsimulator = new FundedPensionSimulator({
             TER,
-            yearlyInterest: 0.05,
+            yearlyInterest: 0.03,
             monthlyInput,
             currentAge: 24,
             capitalPayout: true
         });
         const fundedEndAmount = fundedsimulator.runSimulation();
-        console.log('Simulating ETF with linear interest');
         const etfsimulator = new ETFSimulator({
             TER,
             yearlyInterest: 0.05,
@@ -28,8 +26,10 @@ describe('Simulate ETF', () => {
             { 'Field': 'finalAmount', 'Funded Pension': fundedEndAmount.finalAmount.toFixed(2), 'ETF': etfEndAmount.finalAmount.toFixed(2), 'Difference': (fundedEndAmount.finalAmount - etfEndAmount.finalAmount).toFixed(2) },
             { 'Field': 'totalInvested', 'Funded Pension': fundedEndAmount.totalInvested.toFixed(2), 'ETF': etfEndAmount.totalInvested.toFixed(2), 'Difference': (fundedEndAmount.totalInvested - etfEndAmount.totalInvested).toFixed(2) },
             { 'Field': 'totalTaxPaid', 'Funded Pension': fundedEndAmount.totalTaxPaid.toFixed(2), 'ETF': etfEndAmount.totalTaxPaid.toFixed(2), 'Difference': (fundedEndAmount.totalTaxPaid - etfEndAmount.totalTaxPaid).toFixed(2) },
-            { 'Field': 'months', 'Funded Pension': fundedEndAmount.months.toFixed(2), 'ETF': etfEndAmount.months.toFixed(2), 'Difference': (fundedEndAmount.months - etfEndAmount.months).toFixed(2) }
+            { 'Field': 'months', 'Funded Pension': fundedEndAmount.months.toFixed(2), 'ETF': etfEndAmount.months.toFixed(2), 'Difference': (fundedEndAmount.months - etfEndAmount.months).toFixed(2) },
+            { 'Field': 'years', 'Funded Pension': (fundedEndAmount.months / 12).toFixed(2), 'ETF': (etfEndAmount.months / 12).toFixed(2), 'Difference': ((fundedEndAmount.months - etfEndAmount.months) / 12).toFixed(2) }
         ];
+        console.log('With linear interest');
         printTable(results);
     });
 
@@ -42,8 +42,8 @@ describe('Simulate ETF', () => {
         console.log('Calculating monthly interest');
         const monthlyInterest = calculator.getMonthlyInterestRates((2025 - 1978) * 12 + 1);
 
-        console.log('First 10 elements of monthly interest:', monthlyInterest.slice(0, 5));
-        console.log('Last 10 elements of monthly interest:', monthlyInterest.slice(-5));
+        console.log('First 2 elements of monthly interest:', monthlyInterest.slice(0, 2));
+        console.log('Last 2 elements of monthly interest:', monthlyInterest.slice(-2));
 
         expect(monthlyInterest.length).toBeGreaterThan(0);
         expect(monthlyInterest[0]).equals(calculator.calculateAverageInterest());
@@ -78,8 +78,10 @@ describe('Simulate ETF', () => {
             { 'Field': 'finalAmount', 'Funded Pension': fundedEndAmount.finalAmount.toFixed(2), 'ETF': etfEndAmount.finalAmount.toFixed(2), 'Difference': (fundedEndAmount.finalAmount - etfEndAmount.finalAmount).toFixed(2) },
             { 'Field': 'totalInvested', 'Funded Pension': fundedEndAmount.totalInvested.toFixed(2), 'ETF': etfEndAmount.totalInvested.toFixed(2), 'Difference': (fundedEndAmount.totalInvested - etfEndAmount.totalInvested).toFixed(2) },
             { 'Field': 'totalTaxPaid', 'Funded Pension': fundedEndAmount.totalTaxPaid.toFixed(2), 'ETF': etfEndAmount.totalTaxPaid.toFixed(2), 'Difference': (fundedEndAmount.totalTaxPaid - etfEndAmount.totalTaxPaid).toFixed(2) },
-            { 'Field': 'months', 'Funded Pension': fundedEndAmount.months.toFixed(2), 'ETF': etfEndAmount.months.toFixed(2), 'Difference': (fundedEndAmount.months - etfEndAmount.months).toFixed(2) }
+            { 'Field': 'months', 'Funded Pension': fundedEndAmount.months.toFixed(2), 'ETF': etfEndAmount.months.toFixed(2), 'Difference': (fundedEndAmount.months - etfEndAmount.months).toFixed(2) },
+            { 'Field': 'years', 'Funded Pension': (fundedEndAmount.months / 12).toFixed(2), 'ETF': (etfEndAmount.months / 12).toFixed(2), 'Difference': ((fundedEndAmount.months - etfEndAmount.months) / 12).toFixed(2) }
         ];
+        console.log('WIth historical data')
         printTable(results);
     });
 });
