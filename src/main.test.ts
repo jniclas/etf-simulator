@@ -10,7 +10,7 @@ describe('Simulate ETF', () => {
         const TER = 0.002;
         const fundedsimulator = new FundedPensionSimulator({
             TER,
-            yearlyInterest: 0.03,
+            yearlyInterest: 0.05,
             monthlyInput,
             currentAge: 24,
             capitalPayout: true
